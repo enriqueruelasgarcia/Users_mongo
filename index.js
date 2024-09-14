@@ -9,7 +9,6 @@ app.use(cors());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
-// Cadena de conexión de MongoDB
 const mongoURI = process.env.MONGO_URI;
 const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -19,7 +18,7 @@ let userCollection;
 client.connect()
     .then(() => {
         console.log('Connected to MongoDB');
-        db = client.db('exerciseTracker'); // Cambia 'exerciseTracker' por el nombre de tu base de datos
+        db = client.db('exerciseTracker');
         userCollection = db.collection('users');
     })
     .catch(err => {
@@ -71,7 +70,6 @@ app.post('/api/users/:_id/exercises', async(req, res) => {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Fetch the updated user
         const user = await userCollection.findOne({ _id: new ObjectId(_id) });
         if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
